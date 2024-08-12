@@ -11,6 +11,9 @@ export default function Home() {
   const [inventory, setInventory] = useState([])
   const [open, setOpen] = useState(false)
   const [itemName, setItemName] = useState('') //use to set the name of the item we are adding
+  //search functionality:
+  const [searchTerm, setSearchTerm] = useState('');
+
 
   //updating from firebase
   const updateInventory = async () => {
@@ -50,6 +53,7 @@ export default function Home() {
     const docRef = doc(collection(firestore, 'inventory'), item) //gets direct item reference
     const docSnap = await getDoc(docRef)
 
+
     if(docSnap.exists()) {
       const {quantity} = docSnap.data()
       await setDoc(docRef, {quantity: quantity + 1})
@@ -69,6 +73,12 @@ export default function Home() {
   //some other helper functions (modal?)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
+
+  //search
+  const filteredInventory = inventory.filter(item => 
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  
 
   return (
     <Box
@@ -94,7 +104,7 @@ export default function Home() {
           sx={{
             transform: 'translate(-50%,-50%)',
           }}>
-            <Typography variant="h6">Add Item</Typography>
+            
             <Stack width="100%" direction="row" spacing={2}>
               <TextField
                 variant='outlined'
@@ -127,9 +137,18 @@ export default function Home() {
           justifyContent="center">
           <Typography variant="h2" color='#333'>Inventory Items</Typography>
         </Box>
+
+        <TextField 
+          variant="outlined" 
+          placeholder="Search items..." 
+          fullWidth 
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)} // Update search term on change
+        />
+        
       <Stack width="800px" height="300px" spacing={2} overflow="auto">
         {
-          inventory.map(({name, quantity}) => (
+          filteredInventory.map(({name, quantity}) => (
             <Box 
               key={name}
               width="100%"
