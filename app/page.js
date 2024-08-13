@@ -358,9 +358,9 @@ export default function Home() {
                 left="50%"
                 width={600}
                 bgcolor="white"
-                border="2px solid #000"
+                border="1px solid #ddd"
                 boxShadow={24}
-                p={4}
+                p={2}
                 display="flex"
                 flexDirection="column"
                 gap={3}
@@ -438,6 +438,8 @@ export default function Home() {
             </Modal>
           </Box>
         </Card>
+        <Typography variant="caption">Nada Hameed</Typography>
+        <Typography variant="caption">Recipes from Spoonacular API</Typography>
       </ThemeProvider>
     </Box>
   );
