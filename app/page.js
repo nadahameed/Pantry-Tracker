@@ -96,8 +96,6 @@ export default function Home() {
     handleRecipesOpen()
   }
 
-
-
   const getRecipe = async (ingredients) => {
     try {
       const response = await fetch(
@@ -115,6 +113,26 @@ export default function Home() {
       return [];
     }
   }
+
+  //get recipe info/url
+  const getRecipeInformation = async (recipeId) => {
+    try {
+      const response = await fetch(
+        `https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=${SPOONACULAR_API_KEY}`
+      )
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+  
+      const recipeInfo = await response.json()
+      return recipeInfo;
+    } catch (error) {
+      console.error('Error fetching recipe information:', error)
+      return null;
+    }
+  };
+  
   
 
   return (
@@ -268,6 +286,16 @@ export default function Home() {
               <strong>Unused Ingredients:</strong> {recipe.unusedIngredients.map(ingredient => ingredient.name).join(', ')}
             </Typography>
           )}
+
+          {/* Add the Recipe Link Button */}
+          <Button variant="contained" color="primary" onClick={async () => {
+            const recipeInfo = await getRecipeInformation(recipe.id);
+              if (recipeInfo && recipeInfo.sourceUrl) {
+              window.open(recipeInfo.sourceUrl, '_blank');
+            }
+          }}>
+          Get Recipe
+          </Button>
         </Box>
       ))}
     </Stack>
